@@ -137,7 +137,20 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       let embedUrl = url;
       if (url.includes('youtube.com') || url.includes('youtu.be')) {
-        embedUrl += (url.includes('?') ? '&' : '?') + 'autoplay=1&rel=0';
+        let videoId = '';
+        if (url.includes('youtu.be/')) {
+          videoId = url.split('youtu.be/')[1].split(/[?#]/)[0];
+        } else if (url.includes('youtube.com/watch')) {
+          const urlParams = new URLSearchParams(url.split('?')[1]);
+          videoId = urlParams.get('v');
+        } else if (url.includes('youtube.com/embed/')) {
+          videoId = url.split('youtube.com/embed/')[1].split(/[?#]/)[0];
+        }
+        if (videoId) {
+          embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+        } else {
+          embedUrl += (url.includes('?') ? '&' : '?') + 'autoplay=1&rel=0';
+        }
       } else if (url.includes('instagram.com')) {
         let baseUrl = url.split('?')[0];
         if (!baseUrl.endsWith('/')) {
@@ -266,6 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
 
     const title = document.getElementById('c-title').value;
+    const desc = document.getElementById('c-desc').value;
     const category = document.getElementById('c-category').value;
     const thumb = document.getElementById('c-thumb').value;
     const videoUrl = document.getElementById('c-video').value;
@@ -293,6 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="portfolio-card-overlay">
           <span class="portfolio-category">${categoryLabel}</span>
           <h3 class="portfolio-card-title">${title}</h3>
+          ${desc ? `<p class="portfolio-card-desc">${desc}</p>` : ''}
         </div>
       </div>
     `;

@@ -572,6 +572,14 @@ header.scrolled .nav-container {
   margin-bottom: 8px;
 }
 
+.portfolio-card-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
 .portfolio-play-btn {
   width: 48px;
   height: 48px;
