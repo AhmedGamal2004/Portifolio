@@ -1227,6 +1227,11 @@ footer {
   bottom: 24px;
   right: 24px;
   z-index: 999;
+  display: none; /* Hidden by default */
+}
+
+.customizer-widget.show-admin {
+  display: block;
 }
 
 .customizer-btn {

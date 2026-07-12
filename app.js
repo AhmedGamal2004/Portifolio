@@ -261,6 +261,29 @@ document.addEventListener('DOMContentLoaded', () => {
   const custBtn = document.getElementById('customizer-btn');
   const custPanel = document.getElementById('customizer-panel');
   const custForm = document.getElementById('customizer-form');
+  const custWidget = document.querySelector('.customizer-widget');
+
+  // Check URL parameters for admin/edit mode access
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.has('edit')) {
+    if (urlParams.get('edit') === 'true') {
+      localStorage.setItem('portfolio_admin', 'true');
+    } else if (urlParams.get('edit') === 'false') {
+      localStorage.removeItem('portfolio_admin');
+    }
+  } else if (urlParams.has('admin')) {
+    if (urlParams.get('admin') === 'true') {
+      localStorage.setItem('portfolio_admin', 'true');
+    } else if (urlParams.get('admin') === 'false') {
+      localStorage.removeItem('portfolio_admin');
+    }
+  }
+
+  // Toggle widget visibility based on admin status stored in localStorage
+  const isAdmin = localStorage.getItem('portfolio_admin') === 'true';
+  if (isAdmin && custWidget) {
+    custWidget.classList.add('show-admin');
+  }
 
   // Toggle Customizer Panel
   custBtn.addEventListener('click', (e) => {
