@@ -286,7 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Helper to create portfolio card structure
-  function createProjectCard(title, desc, category, thumb, videoUrl, isCustom = false) {
+  function createProjectCard(title, desc, category, thumb, videoUrl, isCustom = false, logoUrl = '') {
     const categoryLabels = {
       'commercial': 'Ads & Commercials',
       'youtube': 'YouTube / Long Form',
@@ -306,6 +306,11 @@ document.addEventListener('DOMContentLoaded', () => {
         <button class="delete-project-btn" style="position: absolute; top: 12px; left: 12px; z-index: 100; background: rgba(220, 53, 69, 0.9); backdrop-filter: blur(4px); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.3);" title="Delete Project">
           <i class="fa-solid fa-trash-can" style="font-size: 14px;"></i>
         </button>
+      ` : ''}
+      ${logoUrl ? `
+        <div class="portfolio-brand-logo" title="Client/Brand Logo">
+          <img src="${logoUrl}" alt="Brand Logo">
+        </div>
       ` : ''}
       <div class="portfolio-thumbnail" data-video="${videoUrl}">
         <img src="${thumb}" alt="${title}">
@@ -347,7 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Load custom projects from localStorage on startup
   const savedProjects = JSON.parse(localStorage.getItem('custom_projects') || '[]');
   savedProjects.forEach(project => {
-    const card = createProjectCard(project.title, project.desc, project.category, project.thumb, project.videoUrl, true);
+    const card = createProjectCard(project.title, project.desc, project.category, project.thumb, project.videoUrl, true, project.logoUrl);
     portfolioGrid.insertBefore(card, portfolioGrid.firstChild);
   });
   bindVideoTriggers();
@@ -373,14 +378,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const category = document.getElementById('c-category').value;
     const thumb = document.getElementById('c-thumb').value;
     const videoUrl = document.getElementById('c-video').value;
+    const logoUrl = document.getElementById('c-logo').value;
 
     // Save to localStorage
     const currentSaved = JSON.parse(localStorage.getItem('custom_projects') || '[]');
-    currentSaved.push({ title, desc, category, thumb, videoUrl });
+    currentSaved.push({ title, desc, category, thumb, videoUrl, logoUrl });
     localStorage.setItem('custom_projects', JSON.stringify(currentSaved));
 
     // Create card using helper
-    const newCard = createProjectCard(title, desc, category, thumb, videoUrl, true);
+    const newCard = createProjectCard(title, desc, category, thumb, videoUrl, true, logoUrl);
 
     // Add to top of grid
     portfolioGrid.insertBefore(newCard, portfolioGrid.firstChild);
