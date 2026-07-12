@@ -285,6 +285,73 @@ document.addEventListener('DOMContentLoaded', () => {
     custWidget.classList.add('show-admin');
   }
 
+  // Helper to create portfolio card structure
+  function createProjectCard(title, desc, category, thumb, videoUrl, isCustom = false) {
+    const categoryLabels = {
+      'commercial': 'Ads & Commercials',
+      'youtube': 'YouTube / Long Form',
+      'shorts': 'TikTok & Reels',
+      'motion': 'Motion Graphics'
+    };
+    const categoryLabel = categoryLabels[category] || 'Custom Style';
+
+    const card = document.createElement('div');
+    card.className = 'portfolio-card';
+    card.setAttribute('data-category', category);
+    
+    const showDelete = isCustom && (localStorage.getItem('portfolio_admin') === 'true');
+
+    card.innerHTML = `
+      ${showDelete ? `
+        <button class="delete-project-btn" style="position: absolute; top: 12px; left: 12px; z-index: 100; background: rgba(220, 53, 69, 0.9); backdrop-filter: blur(4px); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.3);" title="Delete Project">
+          <i class="fa-solid fa-trash-can" style="font-size: 14px;"></i>
+        </button>
+      ` : ''}
+      <div class="portfolio-thumbnail" data-video="${videoUrl}">
+        <img src="${thumb}" alt="${title}">
+        <div class="portfolio-play-btn">
+          <i class="fa-solid fa-play"></i>
+        </div>
+        <div class="portfolio-card-overlay">
+          <span class="portfolio-category">${categoryLabel}</span>
+          <h3 class="portfolio-card-title">${title}</h3>
+          ${desc ? `<p class="portfolio-card-desc">${desc}</p>` : ''}
+        </div>
+      </div>
+    `;
+
+    if (showDelete) {
+      const delBtn = card.querySelector('.delete-project-btn');
+      delBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (confirm(`Are you sure you want to delete "${title}"?`)) {
+          card.style.transform = 'scale(0.9)';
+          card.style.opacity = '0';
+          card.style.transition = 'all 0.4s ease';
+          setTimeout(() => {
+            card.remove();
+          }, 400);
+
+          let saved = JSON.parse(localStorage.getItem('custom_projects') || '[]');
+          saved = saved.filter(p => !(p.title === title && p.videoUrl === videoUrl));
+          localStorage.setItem('custom_projects', JSON.stringify(saved));
+        }
+      });
+    }
+
+    return card;
+  }
+
+  // Load custom projects from localStorage on startup
+  const savedProjects = JSON.parse(localStorage.getItem('custom_projects') || '[]');
+  savedProjects.forEach(project => {
+    const card = createProjectCard(project.title, project.desc, project.category, project.thumb, project.videoUrl, true);
+    portfolioGrid.insertBefore(card, portfolioGrid.firstChild);
+  });
+  bindVideoTriggers();
+
   // Toggle Customizer Panel
   custBtn.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -307,33 +374,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const thumb = document.getElementById('c-thumb').value;
     const videoUrl = document.getElementById('c-video').value;
 
-    // Convert category keyword to user-friendly label
-    const categoryLabels = {
-      'commercial': 'Ads & Commercials',
-      'youtube': 'YouTube / Long Form',
-      'shorts': 'TikTok & Reels',
-      'motion': 'Motion Graphics'
-    };
-    const categoryLabel = categoryLabels[category] || 'Custom Style';
+    // Save to localStorage
+    const currentSaved = JSON.parse(localStorage.getItem('custom_projects') || '[]');
+    currentSaved.push({ title, desc, category, thumb, videoUrl });
+    localStorage.setItem('custom_projects', JSON.stringify(currentSaved));
 
-    // Create standard structure
-    const newCard = document.createElement('div');
-    newCard.className = 'portfolio-card';
-    newCard.setAttribute('data-category', category);
-    
-    newCard.innerHTML = `
-      <div class="portfolio-thumbnail" data-video="${videoUrl}">
-        <img src="${thumb}" alt="${title}">
-        <div class="portfolio-play-btn">
-          <i class="fa-solid fa-play"></i>
-        </div>
-        <div class="portfolio-card-overlay">
-          <span class="portfolio-category">${categoryLabel}</span>
-          <h3 class="portfolio-card-title">${title}</h3>
-          ${desc ? `<p class="portfolio-card-desc">${desc}</p>` : ''}
-        </div>
-      </div>
-    `;
+    // Create card using helper
+    const newCard = createProjectCard(title, desc, category, thumb, videoUrl, true);
 
     // Add to top of grid
     portfolioGrid.insertBefore(newCard, portfolioGrid.firstChild);
