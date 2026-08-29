@@ -173,10 +173,18 @@ document.addEventListener('DOMContentLoaded', () => {
   function closeModal() {
     modal.classList.remove('active');
     document.body.style.overflow = 'auto'; // Unlock background scroll
+    const activeVideo = iframeContainer.querySelector('video');
+    if (activeVideo) {
+      activeVideo.pause();
+    }
+    const activeIframe = iframeContainer.querySelector('iframe');
+    if (activeIframe) {
+      activeIframe.src = '';
+    }
     // Delay resetting iframe to avoid visual jarring during transition
     setTimeout(() => {
       iframeContainer.innerHTML = '';
-    }, 400);
+    }, 300);
   }
 
   modalClose.addEventListener('click', closeModal);
