@@ -84,8 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const cards = portfolioGrid.querySelectorAll('.portfolio-card');
 
       cards.forEach(card => {
-        const category = card.getAttribute('data-category');
-        if (filterValue === 'all' || category === filterValue) {
+        const categories = (card.getAttribute('data-category') || '').trim().split(/\s+/);
+        if (filterValue === 'all' || categories.includes(filterValue)) {
           card.classList.remove('hidden');
           // Simple visual fade in
           card.style.opacity = '0';
