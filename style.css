@@ -612,6 +612,22 @@ header.scrolled .nav-container {
 }
 
 /* Brand/Client Logo Badge */
+.portfolio-brand-logos {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.portfolio-brand-logos .portfolio-brand-logo {
+  position: static;
+  top: auto;
+  right: auto;
+}
+
 .portfolio-brand-logo {
   position: absolute;
   top: 12px;
@@ -633,10 +649,16 @@ header.scrolled .nav-container {
 }
 
 .portfolio-card:hover .portfolio-brand-logo {
-  transform: scale(1.1);
+  transform: scale(1.05);
   border-color: var(--accent-cyan);
   box-shadow: 0 0 15px rgba(0, 242, 254, 0.35);
   background: rgba(15, 17, 24, 0.85);
+}
+
+.portfolio-brand-logo:hover {
+  transform: scale(1.2) !important;
+  border-color: #fff !important;
+  box-shadow: 0 0 20px rgba(0, 242, 254, 0.6) !important;
 }
 
 .portfolio-brand-logo img {
