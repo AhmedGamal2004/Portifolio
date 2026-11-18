@@ -140,6 +140,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let videoId = '';
         if (url.includes('youtu.be/')) {
           videoId = url.split('youtu.be/')[1].split(/[?#]/)[0];
+        } else if (url.includes('youtube.com/shorts/')) {
+          videoId = url.split('youtube.com/shorts/')[1].split(/[?#]/)[0];
         } else if (url.includes('youtube.com/watch')) {
           const urlParams = new URLSearchParams(url.split('?')[1]);
           videoId = urlParams.get('v');
